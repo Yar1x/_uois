@@ -1,0 +1,113 @@
+from email.policy import default
+from turtle import back
+import sqlalchemy
+import datetime
+
+from sqlalchemy import Column, String, BigInteger, Integer, DateTime, ForeignKey, Sequence, Table, Boolean
+from sqlalchemy.dialects.postgresql import UUID
+
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
+
+BaseModel = declarative_base()
+
+def UUIDColumn(name=None):
+    if name is None:
+        return Column(UUID(as_uuid=True), primary_key=True, server_default=sqlalchemy.text("gen_random_uuid()"),)
+    else:
+        return Column(name, UUID(as_uuid=True), primary_key=True, server_default=sqlalchemy.text("gen_random_uuid()"),)
+
+#id = Column(UUID(as_uuid=True), primary_key=True, server_default=sqlalchemy.text("uuid_generate_v4()"),)
+
+class PresenceModel(BaseModel):
+
+    """Spravuje data spojené s účasti na události"""
+    __tablename__ = 'presence'
+
+    id = UUIDColumn()
+    date = Column(String)
+
+    presence = relationship('PresenceType', back_populates='presence')
+    task = relationship('TaskModel', back_populates='presence')
+    content = relationship('ContentModel', back_populates='presence')
+
+class PresenceType(BaseModel):
+    """"
+    Urcuje typ pritomnosti
+    """
+    __tablename__='presencetypes'
+
+    id = UUIDColumn()
+    name = Column(String)
+
+class TaskModel(BaseModel):
+    """
+    Urcuje specifikaci ukolu udalosti
+    """
+
+    ___tablename___='task'
+
+    id = UUIDColumn()
+
+    brief_desc = Column(String)
+    detail_desc = Column(String)
+    reference = Column(String)
+    date_of_entry = Column(DateTime)
+    date_of_sub = Column(DateTime)
+    date_of_full = Column(DateTime)
+
+    """
+    event = relationship('EventModel', back_populates='task')
+    user = relationship('UserModel', back_populates='task')
+    """
+
+class ContentModel(BaseModel):
+
+    """
+    Urcuje obsah události
+    """
+    ___tablename___ = 'content'
+
+    id = UUIDColumn()
+
+    brief_des = Column(String)
+    detail_des = Column(String)
+
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import create_async_engine
+
+async def startEngine(connectionstring, makeDrop=False, makeUp=True):
+    """Provede nezbytne ukony a vrati asynchronni SessionMaker """
+    asyncEngine = create_async_engine(connectionstring) 
+
+    async with asyncEngine.begin() as conn:
+        if makeDrop:
+            await conn.run_sync(BaseModel.metadata.drop_all)
+            print('BaseModel.metadata.drop_all finished')
+        if makeUp:
+            await conn.run_sync(BaseModel.metadata.create_all)    
+            print('BaseModel.metadata.create_all finished')
+
+    async_sessionMaker = sessionmaker(
+        asyncEngine, expire_on_commit=False, class_=AsyncSession
+    )
+    return async_sessionMaker
+
+import os
+def ComposeConnectionString():
+    """Odvozuje connectionString z promennych prostredi (nebo z Docker Envs, coz je fakticky totez).
+       Lze predelat na napr. konfiguracni file.
+    """
+    user = os.environ.get("POSTGRES_USER", "postgres")
+    password = os.environ.get("POSTGRES_PASSWORD", "example")
+    database =  os.environ.get("POSTGRES_DB", "data")
+    hostWithPort =  os.environ.get("POSTGRES_HOST", "postgres:5432")
+    
+    driver = "postgresql+asyncpg" #"postgresql+psycopg2"
+    connectionstring = f"{driver}://{user}:{password}@{hostWithPort}/{database}"
+
+    return connectionstring

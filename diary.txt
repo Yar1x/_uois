@@ -1,0 +1,51 @@
+
+##################################### ZADÁNÍ ##################################################
+
+Vytvořte datové struktury pro definici přítomnosti na události, typu přítomnosti na události, 
+specifikaci obsahu (stručný popis události, komplexní popis události), specifikaci vyplývajících úkolů.
+Úkoly zadané osobám (viz 1.). U úkolů stručný popis, detailní popis, jeden odkaz, datum zadání, datum, 
+kdy má být splněno, datum, kdy bylo splněno
+
+############################################################################################################
+
+4 entity
+    -definice přítomnosti ()
+    -typ přítomnosti ()
+    -specifikaci obsahu ()
+    -specifikaci vyplývajicích úkolů ()
+
+
+#################### 17.10.2022 #########################
+
+Tento den se konzultovvalo s prof. Štefkem.
+
+Ujasnili jsme si zadání projekt, jaké máme mít entity, kolik jich bude a co v nich bude.
+
+Abychom mohli pracovat s tímto repo. tak byla potřeba si udělat vlastní kontejner (pojemonován gql_events2).
+Do toho kontejneru jsme poté zkopírovali z gql_ug DPDefinitions.py až po GraphTypeDefinitions. 
+
+DPDefinitions.py jsme si upravili podle našeho diagramu. Přidali jsme tam naše 4 entity (PresenceModel, PresenceType, TaskModel a ContentModel).
+Po té jsme upravili soubor DPFeeder.py aby souhlasil s naším DPDefinitions.py.
+
+Co se má psát si nejsme úplně jistí, jelikož v tomto prostředí pracujeme poprvé.
+Vše se ale ujasní na zítřejším projketovým dnu.
+
+Nebylo to odzkoušeno v Apollu.
+
+
+#################### PRVNÍ KONZULTACE - 17.10.2022 #########################
+
+1. Ujasnit si zadání - splněno
+2. Co budu potřebovat a v čem se bude pracovat - splněno
+
+ER-Diagram je hotový (zatím)
+Je potřeba udělat si vlastní container (např. gql_events2) se kterým budeme pracovat.
+Inspiraci můžeme hledat v gql_ug, kde jsou soubory jako DBDefinitions
+
+##################### PROJEKTOVÝ DEN - 18.10.2022 #############################
+
+-udělat schéma - splněno
+-github a fork - splněno
+-commit v posledních sedmí dní - splněno
+-vytvořit kontejner - splněno
+-do kontejneru sepsat entity - splněno

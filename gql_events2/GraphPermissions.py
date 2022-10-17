@@ -3,7 +3,6 @@ import strawberry
 
 from gql_ug.DBDefinitions import BaseModel, UserModel, GroupModel, MembershipModel, RoleModel
 from gql_ug.DBDefinitions import GroupTypeModel, RoleTypeModel
-from gql_events2.DBDefinitions import BaseModel, PresenceModel, PresenceType, TaskModel, ContentModel
 
 def AsyncSessionFromInfo(info):
     return info.context['session']
