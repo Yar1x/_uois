@@ -1,3 +1,4 @@
+from sqlite3 import Date
 import sqlalchemy
 import datetime
 
@@ -25,6 +26,70 @@ def UUIDColumn(name=None):
 ###########################################################################################################################
 
 
+class PresenceModel(BaseModel):
+
+    """Spravuje data spojené s účasti na události"""
+    __tablename__ = 'presence'
+
+    id = UUIDColumn()
+    date = Column(DateTime)
+
+    #event_id = Column(ForeignKey('event.id'), primary_key = True)
+    #user_id = Column(ForeignKey(users.id), primary_key = True)
+    presenceType_id = Column(ForeignKey('presencetypes.id'),primary_key = True)
+    task_id = Column(ForeignKey('tasks.id'), primary_key = True)
+    
+    presenceType = relationship('PresenceTypeModel', back_populates='presence')
+    task = relationship('TaskModel', back_populates = 'presence')
+    #user = relationship('UserModel', back_populates='presence')
+    #event = relationship('EventModel', back_populates='presence')
+
+class PresenceTypeModel(BaseModel):
+    """"
+    Urcuje typ pritomnosti
+    """
+    __tablename__='presencetypes'
+
+    id = UUIDColumn()
+    name = Column(String)
+
+    presence = relationship('PresenceModel', back_populates='presencetypes')
+
+
+class TaskModel(BaseModel):
+    """
+    Urcuje specifikaci ukolu udalosti
+    """
+
+    __tablename__ = 'tasks'
+
+    id = UUIDColumn()
+    #event_id = Column(ForeignKey('event.id'), primary_key = True)
+    #user_id = Column(ForeignKey(users.id), primary_key = True)
+
+    brief_desc = Column(String)
+    detail_desc = Column(String)
+    reference = Column(String)
+    date_of_entry = Column(DateTime)
+    date_of_sub = Column(DateTime)
+    date_of_full = Column(DateTime)
+
+    presence = relationship('PresenceModel', back_populates='tasks')
+    #user = relationship('UserModel', back_populates='presence')
+    #event = relationship('EventModel', back_populates='presence')
+
+
+class ContentModel(BaseModel):
+
+    """
+    Urcuje obsah události
+    """
+    __tablename__ = 'content'
+
+    id = UUIDColumn()
+
+    brief_des = Column(String)
+    detail_des = Column(String)
 
 
 

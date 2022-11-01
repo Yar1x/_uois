@@ -1,0 +1,10 @@
+Hodnocení:
+•	Obhajoba 60 b
+•	Absolvování jednoho projektového dne (součástí je commit na github ne starší než 1 týden) 5 b (x3, tj. 15 b), po domluvě lze nahradit individuálně
+•	Příběh (na githubu) 5 b
+•	Docker image (na docker hub) + docker compose (v repository) 5 b
+•	Množina operací - resolvery (komplet CRUD nad všemi entitami) 10 b
+•	Řádné komentáře v kódu 5 b
+•	Vygenerovaná dokumentace 5 b
+•	Prokázaná funkčnost (alespoň jupyter notebook) 10 b
+•	Lze získat až 115 bodů. Předmětem projdete, pokud budete mít více než 50 bodů, hodnocení „A“ získáte za 90 bodů a více
