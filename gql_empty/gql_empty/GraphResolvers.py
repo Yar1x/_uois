@@ -13,6 +13,8 @@ from gql_empty.DBDefinitions import BaseModel, PresenceModel, PresenceTypeModel,
 
 #presence resolvers
 resolvePresenceByID = createEntityByIdGetter(PresenceModel)
+resolvePresenceAll = createEntityGetter(PresenceModel)
+
 resolveTypeForPresence = create1NGetter(PresenceTypeModel, foreignKeyName = 'presence_id', options=joinedload(PresenceTypeModel.presence))
 resolveTaskForPresence = create1NGetter(TaskModel,foreignKeyName='presence_id',options=joinedload(TaskModel.presence))
 
@@ -20,6 +22,7 @@ resolveTaskForPresence = create1NGetter(TaskModel,foreignKeyName='presence_id',o
 
 resolvePresenceTypeByID = createEntityByIdGetter(PresenceTypeModel)
 resolvePresenceTypeAll = createEntityGetter(PresenceTypeModel)
+
 
 async def resolvePresenceByPresenceType(session,presencetypeId):
     stmt = select(PresenceModel).join(PresenceTypeModel).where(PresenceModel.presenceType_id == presencetypeId)

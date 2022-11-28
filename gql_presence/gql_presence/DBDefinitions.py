@@ -34,17 +34,16 @@ class PresenceModel(BaseModel):
     id = UUIDColumn()
     date = Column(DateTime)
 
-    event_id = Column(ForeignKey('events.id'), primary_key = True)
-    # vytvořit event model s UUIDColumn()
-    user_id = Column(ForeignKey('users.id'), primary_key = True)
-    # vytvořit user model s UUIDColumn()
     presenceType_id = Column(ForeignKey('presencetypes.id'),primary_key = True)
-    task_id = Column(ForeignKey('tasks.id'), primary_key = True)
-    
-    presenceType = relationship('PresenceTypeModel', back_populates='presence')
-    task = relationship('TaskModel', back_populates = 'presence')
-    #user = relationship('UserModel', back_populates='presence')
-    #event = relationship('EventModel', back_populates='presence')
+    presenceType = relationship('PresenceTypeModel', back_populates='presences')
+
+    #definovat foreign key user_id
+    user_id = Column(ForeignKey('user.id'),primary_key = True)
+    users = relationship('UserModel', back_populates='presences')
+
+    taskOnEvent_id = Column(ForeignKey('taskonevent.id'),primary_key = True)
+    taskOnEvents = relationship('TaskOnEventModel', back_populates='presences')
+
 
 class PresenceTypeModel(BaseModel):
     """"
@@ -55,63 +54,31 @@ class PresenceTypeModel(BaseModel):
     id = UUIDColumn()
     name = Column(String)
 
-    presence = relationship('PresenceModel', back_populates='presencetypes')
+    presences = relationship('PresenceModel', back_populates='presenceType')
 
 
-class TaskModel(BaseModel):
+class UserModel(BaseModel):
     """
-    Urcuje specifikaci ukolu udalosti
+    Spravuje usera
     """
 
-    __tablename__ = 'tasks'
-
-    id = UUIDColumn()
-    #event_id = Column(ForeignKey('event.id'), primary_key = True)
-    #user_id = Column(ForeignKey(users.id), primary_key = True)
-
-    brief_desc = Column(String)
-    detail_desc = Column(String)
-    reference = Column(String)
-    date_of_entry = Column(DateTime)
-    date_of_sub = Column(DateTime)
-    date_of_full = Column(DateTime) #fullfilment
-
-    presence = relationship('PresenceModel', back_populates='tasks')
-    #user = relationship('UserModel', back_populates='presence')
-    #event = relationship('EventModel', back_populates='presence')
-
-
-class ContentModel(BaseModel):
-
-    """
-    Urcuje obsah události
-    """
-    __tablename__ = 'content'
+    __tablename__='user'
 
     id = UUIDColumn()
 
-    brief_des = Column(String)
-    detail_des = Column(String)
+    presences = relationship('PresenceModel', back_populates='users')
 
 class TaskOnEventModel(BaseModel):
 
-    __tablename__ = 'tasksonevents'
+    __tablename__='taskonevent'
 
     id = UUIDColumn()
+    name = Column(String)
 
-    # Foregin key pro presenceModel a taskModel
+    presences = relationship('PresenceModel', back_populates='taskOnEvents')
 
-class EventModel(BaseModel):
 
-    __tablename__ = 'events'
 
-    id = UUIDColumn()
-
-class UserModel(BaseModel):
-
-    __tablename__ = 'users'
-    
-    id = UUIDColumn()
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker

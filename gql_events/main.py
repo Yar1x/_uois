@@ -23,7 +23,7 @@ class UserGQLModel:
 
     id: strawberryB.ID = strawberryB.federation.field(external=True)
 
-    @strawberryB.field
+    @strawberryB.field(description="""Foreign key""")
     def events(self) -> typing.List['EventGQLModel']:
         return [randomEvent(id) for id in range(10)]
 

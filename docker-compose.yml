@@ -14,6 +14,7 @@ services:
       - gql_ug
       - gql_workflow
       - gql_events
+      - gql_presence
     ports:
       - 31121:3000
 
@@ -44,10 +45,10 @@ services:
     ports:
       - 31123:8000
 
-  gql_empty:
-    image: gql_empty
+  gql_presence:
+    image: gql_presence
     build:
-      context: ./gql_empty
+      context: ./gql_presence
     environment: 
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=example

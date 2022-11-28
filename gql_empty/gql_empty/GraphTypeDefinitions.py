@@ -65,25 +65,23 @@ class PresenceGQLModel:
         return result
 
     @strawberryA.field(description="""Entity primary key""")
-    def id(self, info: strawberryA.types.Info) -> strawberryA.ID:
+    def id(self)-> strawberryA.ID:
         return self.id
     
     @strawberryA.field(description="""Date of the event""")
     def date(self) -> str:
         return self.date
-
-    @strawberryA.field(description="""Presence type (sluzebni cesta)""")
-    async def presencetype(self, info: strawberryA.types.Info) -> PresenceTypeGQLModel:
-        result = await resolvePresenceTypeByID(AsyncSessionFromInfo(info), self.presencetype_id)
-        return result
-    
+        
 
 ###########################################################################################################################
 #
 # zde definujte svuj Query model
 #
 ###########################################################################################################################
-from gql_empty.GraphResolvers import resolvePresenceTypeAll
+from gql_empty.GraphResolvers import resolvePresenceTypeAll, resolvePresenceTypeByID
+from gql_empty.GraphResolvers import resolvePresenceByID, resolvePresenceAll
+from gql_empty.GraphResolvers import resolveTaskByID
+from gql_empty.GraphResolvers import resolveContentByID
 
 @strawberryA.type(description="""Type for query root""")
 class Query:
@@ -97,3 +95,4 @@ class Query:
     async def presence_type_page(self, info: strawberryA.types.Info, skip: int = 0, limit: int = 10) -> List[PresenceTypeGQLModel]:
         result = await resolvePresenceTypeAll(AsyncSessionFromInfo(info), skip, limit)
         return result
+   
