@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from uoishelpers.resolvers import create1NGetter, createEntityByIdGetter, createEntityGetter, createInsertResolver, createUpdateResolver
 from uoishelpers.resolvers import putSingleEntityToDb
 
-from gql_presence.DBDefinitions import BaseModel, PresenceModel, PresenceTypeModel, UserModel, TaskOnEventModel
+from gql_presence.DBDefinitions import BaseModel, PresenceModel, PresenceTypeModel, UserModel, TaskOnEventModel, TaskModel, ContentModel
 
 ###########################################################################################################################
 #
@@ -20,6 +20,9 @@ from gql_presence.DBDefinitions import BaseModel, PresenceModel, PresenceTypeMod
 # presence
 resolvePresenceModelPage = createEntityGetter(PresenceModel)
 resolvePresenceModelById = createEntityByIdGetter(PresenceModel)
+#přejmenovat
+resolvePresenceForUser = create1NGetter(PresenceModel,foreignKeyName='user_id') 
+
 # presence type
 
 resolvePresenceTypeModelPage = createEntityGetter(PresenceTypeModel)
@@ -34,6 +37,17 @@ resolveUserModelById = createEntityByIdGetter(UserModel)
 
 resolveTaskOnEventModelPage = createEntityGetter(TaskOnEventModel)
 resolveTaskOnEventModelById = createEntityByIdGetter(TaskOnEventModel)
+
+# tasks
+
+resolveTaskModelByPage = createEntityGetter(TaskModel)
+resolveTaskModelById = createEntityByIdGetter(TaskModel)
+
+# content
+
+resolveContentModelByPage = createEntityGetter(ContentModel)
+resolveContentModelById = createEntityByIdGetter(ContentModel)
+
 
 ###########################################################################################################################
 #

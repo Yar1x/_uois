@@ -55,6 +55,9 @@ Poprvé se spoustil PgAdmin, který nás zaskočil, ale díky kolegovy s jiné s
 
 Narazilo se na pár problému a to jsou foreignkeys (UserGQLModel) a postgress nám vyhazuje null při zadávní UUID. 
 
+# ################### 27.11.2022 ######################## #
+
+Dodělali se všechny tabulky a které šli, tak se propojili. zobrazují se v apollu i v postgressu.
 
 # ################### PRVNÍ KONZULTACE - 17.10.2022 ######################## #
 
@@ -105,7 +108,6 @@ Po splnění všech fázi se můžeme vrhnout na GQL.
 
 
 
-
 # ################### ČTVRTÉ KONZULTACE 28.11.2022 ##############################
 
 1. Problém s obrazením v apollu
@@ -121,11 +123,29 @@ Tohle se povedlo a máme dvě propojené tabulky (PresenceModel a PresenceTypeMo
 
 Teď je za úkol dodělat zbytek tabulek a vyzkoušet si nadefinovat databáze a vyzkoušet funkčnost kódu.
 
+
+# ################### PÁTÉ KONZULTACE 09.12.2022 ##############################
+
+1. Nefunguje apollo a nginx
+    Error: Couldn't load service definitions for "workflows" at http://gql_workflow:8000/gql: 500: Internal Server Error
+    host not found in upstream "apollo" in /etc/nginx/nginx.conf:54
+    nginx: [emerg] host not found in upstream "apollo" in /etc/nginx/nginx.conf:54
+2. Propojení gql_ug (tabulka s users)
+3. DBFeeder naplnit
+4. Jak začít propojovat s events
+
+
+Úkoly-
+        Naplnit data (DBFeeder) a vyzkošet funkčnost
+        Upravit GraphTypeDefinitions.py (resolvery apod.)
+
+
 # #################### PROJEKTOVÝ DEN - 29.11.2022 ############################ #
 
 - vytvořit modely - splněno
 - zobrazení v apollu - splněno
 - zkouška dat - nesplněno
+
 
 
 # Osoby zodpovědné za tento project
