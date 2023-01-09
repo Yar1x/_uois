@@ -155,6 +155,13 @@ class ContentGQLModel:
     def id(self) -> strawberryA.ID:
         return self.id 
 
+    @strawberryA.field(description="""Brief description""")
+    def brief_desc(self) -> str:
+        return self.brief_desc
+    
+    @strawberryA.field(description="""Full description""")
+    def full_desc(self) -> str:
+        return self.full_desc
     # DODĚLAT BRIEF A FULL DESC
 
    
@@ -198,9 +205,9 @@ class EventGQLModel:
     @strawberryA.field(description="""content id""")
     async def content(self, info: strawberryA.types.Info) -> typing.Union['ContentGQLModel', None]: 
         result = await resolveContentForEvent(AsyncSessionFromInfo(info), self.id) # z tabulky obsahů hledáme event_id = event_id v Content
-        # if(len(result == 0)) return None
-        # if(len(result =! 0)) return result
-        return result
+        if(len(result == 0)): return None
+        if(len(result != 0)) :return result
+        
     
     
     
@@ -266,6 +273,10 @@ class Query:
         result = await resolveContentModelByPage(AsyncSessionFromInfo(info), id)
         return result
 
+    #264 - 267
+    # volat funkci 
+    # 
+    
     #radnomPresenceData 
     #async def ....
     #zavolat funkci 
