@@ -88,6 +88,7 @@ class GroupTypeModel(BaseModel):
     
     id = UUIDColumn()
     name = Column(String)
+    name_en = Column(String)
 
     groups = relationship('GroupModel', back_populates='grouptype')
 
@@ -98,6 +99,7 @@ class RoleTypeModel(BaseModel):
 
     id = UUIDColumn()
     name = Column(String)
+    name_en = Column(String)
 
     roles = relationship('RoleModel', back_populates='roletype')
 
@@ -118,7 +120,6 @@ class RoleModel(BaseModel):
     roletype = relationship('RoleTypeModel', back_populates='roles')
     user = relationship('UserModel', back_populates='roles')
     group = relationship('GroupModel', back_populates='roles')
-
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker

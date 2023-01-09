@@ -140,6 +140,11 @@ Teď je za úkol dodělat zbytek tabulek a vyzkoušet si nadefinovat databáze a
         Upravit GraphTypeDefinitions.py (resolvery apod.)
 
 
+# ################### ŠESTÉ KONZULTACE 13.12.2022 ##############################
+
+1. jak vyřešit contentModel, když rozšiřuje EventModel
+2. jak si updatnout repositář aniž by mi přepsal kód
+
 # #################### PROJEKTOVÝ DEN - 29.11.2022 ############################ #
 
 - vytvořit modely - splněno

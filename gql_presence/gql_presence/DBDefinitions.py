@@ -29,10 +29,11 @@ def UUIDColumn(name=None):
 class PresenceModel(BaseModel):
 
     """Spravuje data spojené s účasti na události"""
-    __tablename__ = 'presence'
 
-    id = UUIDColumn()
-    date = Column(DateTime)
+    __tablename__ = 'presences'
+
+    id = UUIDColumn() #uuid
+    date = Column(DateTime) 
 
     presenceType_id = Column(ForeignKey('presencetypes.id'),primary_key = True)
     presenceType = relationship('PresenceTypeModel', back_populates='presences')
@@ -45,7 +46,7 @@ class PresenceModel(BaseModel):
     events = relationship('EventModel', back_populates='presences')
 
     taskOnEvent_id = Column(ForeignKey('taskonevent.id'),primary_key = True)
-    taskOnEvents = relationship('TaskOnEventModel', back_populates='presences')
+    tasksOnEvents = relationship('TaskOnEventModel', back_populates='presences')
 
 
 class PresenceTypeModel(BaseModel):
@@ -71,7 +72,7 @@ class UserModel(BaseModel):
     id = UUIDColumn()
 
     presences = relationship('PresenceModel', back_populates='users')
-    
+    tasks = relationship('TaskModel', back_populates='users')
 
     
 
@@ -80,39 +81,46 @@ class EventModel(BaseModel):
     Spravuje events
     """
     #tablename v množném čísle
-    __tablename__='event'
+    __tablename__='events'
 
     id = UUIDColumn()
 
     presences = relationship('PresenceModel', back_populates='events')
-
     
-
+    #content_id = Column(ForeignKey('content.id'),primary_key = True)
+    #contents = relationship('ContentModel', back_populates='events')
+    
+# nedotazovat se na tuto tabulku
 class TaskOnEventModel(BaseModel):
 
-    __tablename__='taskonevent'
+    __tablename__='tasksonevents'
 
     id = UUIDColumn()
     name = Column(String)
 
 
-    presences = relationship('PresenceModel', back_populates='taskOnEvents')
+    presences = relationship('PresenceModel', back_populates='tasksOnEvents')
+
     task_id = Column(ForeignKey('task.id'),primary_key = True)
     tasks = relationship('TaskModel', back_populates='tasksOnEvents')
     
 class TaskModel(BaseModel):
 
-    __tablename__='task'
+    __tablename__='tasks'
 
     id = UUIDColumn()
-    brief_desc = Column(String)
-    detail_desc = Column(String)
+    brief_des = Column(String)
+    detail_des = Column(String)
     reference = Column(String)
     date_of_entry = Column(DateTime)
     date_of_submission = Column(DateTime)
     date_of_fullfilment = Column(DateTime)
 
     tasksOnEvents = relationship('TaskOnEventModel', back_populates='tasks')
+
+    
+    user_id = Column(ForeignKey('user.id', primary_key = True))
+    users = relationship('UserModel', back_populates='tasks')
 
     
 
@@ -122,14 +130,15 @@ class TaskModel(BaseModel):
 
 class ContentModel(BaseModel):
 
-    __tablename__='content'
+    __tablename__='contents'
 
     id = UUIDColumn()
     brief_des = Column(String)
     detail_des = Column(String)
 
     tasks = relationship('TaskModel', back_populates='contents')
-    
+    event_id = Column(ForeignKey('event.id'),primary_key = True)
+    #events = relationship('EventModel', back_populates='contents')
 
 
 

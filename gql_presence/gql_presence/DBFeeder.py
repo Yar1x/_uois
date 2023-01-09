@@ -29,39 +29,124 @@ def singleCall(asyncFunc):
 @cache
 def determinePresenceTypes():
     """Definuje zakladni typy přítomnosti a udrzuje je v pameti"""
-    presenceTyes = [
-        {'name': 'present', 'id': '9a336f76-77ef-11ed-a1eb-0242ac120002'},
+    presenceTypes = [
+        {'name': 'present', 'id': 'a6ca5364-7abd-11ed-a1eb-0242ac120002'},
 
         #doplnit zbytek UUID
-        {'name': 'absent'},
-        {'name': 'sick leave'},
+        {'name': 'absent', 'id': 'a6ca574c-7abd-11ed-a1eb-0242ac120002'},
+        {'name': 'sick leave','id': 'a6ca5b7a-7abd-11ed-a1eb-0242ac120002'},
 
-        {'name': 'official leave'},
-        {'name': 'guard duty'},
+        {'name': 'official leave','id': 'a6ca5d0a-7abd-11ed-a1eb-0242ac120002'},
+        {'name': 'guard duty','id': 'a6ca5ee0-7abd-11ed-a1eb-0242ac120002'},
         
 
-        {'name': 'compensatory leave'},
+        {'name': 'compensatory leave','id': 'a6ca6264-7abd-11ed-a1eb-0242ac120002'},
         ]
-    return presenceTyes
+    return presenceTypes
+
+
+@cache
+def determineTasks():
+    """Determinuje základní úlohy"""
+
+    tasks = [
+        {
+            'brief_des': 'create adatabase for presence',
+            'detailed_des': 'create data structures, which define presence at an event, presence types at an event, specified content and tasks for the event ',
+            'referance': 'presence',
+            'date_of_entry': randomDate(),
+            'date_of_submission': randomDate(),
+            'date_of_fulfillment': randomDate(),
+            'id': '1fdd0994-7b0f-11ed-a1eb-0242ac120002'
+        },
+
+        {
+            'brief_des': 'create a database for a user',
+            'detailed_des': 'create data structures, which define a user (name, surname, email, etc.), who has a certain role in a group at the university ',
+            'referance': 'user',
+            'date_of_entry': randomDate(),
+            'date_of_submission': randomDate(),
+            'date_of_fulfillment': randomDate(),
+            'id': '1fdd0c28-7b0f-11ed-a1eb-0242ac120002'
+        },
+        
+        {
+            'brief_des': 'create a database for an event',
+            'detailed_des': 'create data structures, which define an event, event type(classes, test, etc), what time it is, its location (area, building, classroom) ',
+            'referance': 'event',
+            'date_of_entry': randomDate(),
+            'date_of_submission': randomDate(),
+            'date_of_fulfillment': randomDate(),
+            'id': '1fdd0e12-7b0f-11ed-a1eb-0242ac120002'
+        },
+
+        ]
+    return tasks
+
+@cache
+def determineContents():
+
+    """Define základní typy obsahu na události"""
+
+    contents = [
+        {
+            'brief_des': 'INF / LESSON',
+            'detailed_des': 'students will learn advanced programming techniques, such as creating your own simple database ',
+            'id': '0ea557e6-7b12-11ed-a1eb-0242ac120002'
+        },
+
+        {
+            'brief_des': 'INF / EXAM',
+            'detailed_des': 'Students will have to define data structures for a school ',
+            'id': '0ea55a84-7b12-11ed-a1eb-0242ac120002'
+        },
+
+        {
+            'brief_des': 'INF / CREDIT TEST',
+            'detailed_des': 'Students will have to create an ER-Diagram ',
+            'id': '0ea558b7-7b12-11ed-a1eb-0242ac120002'
+        },
+
+    ]
+
+    return contents
+
+
+def randomDate():
+
+    """Vytváří nám náhodný datum"""
+
+    day = random.randrange(1,32)
+    month = random.randrange(1,13)
+    year = '2022'
+
+    return {day,'/', month,'/', year}
+
+
 
 import asyncio
 from gql_presence.DBDefinitions import PresenceTypeModel
 async def predefineAllDataStructures(asyncSessionMaker):
     #
-    # asyncio.gather(
-    #   putPredefinedStructuresIntoTable(asyncSessionMaker, Types1Model, types1), # prvni
-    #   putPredefinedStructuresIntoTable(asyncSessionMaker, Types1Model, types2)  # druha ...
-    # )
+    asyncio.gather(
+       putPredefinedStructuresIntoTable(asyncSessionMaker,PresenceTypeModel,determinePresenceTypes),
+       putPredefinedStructuresIntoTable(asyncSessionMaker,TaskModel,determineTasks),
+       putPredefinedStructuresIntoTable(asyncSessionMaker,ContentModel,determineContents)
+     )
     #
     #
-    await putPredefinedStructuresIntoTable(asyncSessionMaker,PresenceTypeModel,determinePresenceTypes)
+    
     return
-
-async def putPredefinedStructuresIntoTable(asyncSessionMaker, DBModel, structureFunction):
-    """Zabezpeci prvotni inicicalizaci typu externích ids v databazi
+# vytvořit async def 
+# bude se volat akorát TaskModel a ContentModel
+"""Zabezpeci prvotni inicicalizaci typu externích ids v databazi
        DBModel zprostredkovava tabulku, je to sqlalchemy model
        structureFunction() dava data, ktera maji byt ulozena
     """
+
+
+async def putPredefinedStructuresIntoTable(asyncSessionMaker, DBModel, structureFunction):
+    
     # ocekavane typy 
     externalIdTypes = structureFunction()
     
@@ -77,7 +162,7 @@ async def putPredefinedStructuresIntoTable(asyncSessionMaker, DBModel, structure
         {'name': row.name, 'id': f'{row.id}'} for row in dbRows
         ]
 
-    print(structureFunction, 'external id types found in database')
+    print(structureFunction, 'id types found in database')
     print(dbRowsDicts)
 
     # vytahneme si vektor (list) id, ten pouzijeme pro operator in nize
@@ -85,7 +170,7 @@ async def putPredefinedStructuresIntoTable(asyncSessionMaker, DBModel, structure
 
     # zjistime, ktera id nejsou v databazi
     unsavedRows = list(filter(lambda row: not(row['id'] in idsInDatabase), externalIdTypes))
-    print(structureFunction, 'external id types not found in database')
+    print(structureFunction, 'id types not found in database')
     print(unsavedRows)
 
     # pro vsechna neulozena id vytvorime entity
@@ -129,3 +214,4 @@ async def putPredefinedStructuresIntoTable(asyncSessionMaker, DBModel, structure
     # nyni vsechny entity mame v pameti a v databazi synchronizovane
     print(structureFunction())
     pass
+

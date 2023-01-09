@@ -19,10 +19,11 @@ def AsyncSessionFromInfo(info):
 #
 from gql_presence.GraphResolvers import resolvePresenceModelPage, resolvePresenceModelById
 from gql_presence.GraphResolvers import resolvePresenceTypeModelPage,resolvePresenceTypeModelById
-from gql_presence.GraphResolvers import resolvePresenceTypeForPresence
-from gql_presence.GraphResolvers import resolveTaskOnEventModelPage, resolveTaskOnEventModelById
+from gql_presence.GraphResolvers import resolvePresenceForUser, resolveUserModelById
+from gql_presence.GraphResolvers import resolveTaskOnEventModelPage, resolveTaskOnEventModelById, resolveTaskForEvent
 from gql_presence.GraphResolvers import resolveTaskModelByPage, resolveTaskModelById
-from gql_presence.GraphResolvers import resolveContentModelByPage, resolveContentModelById
+from gql_presence.GraphResolvers import resolveContentModelByPage, resolveContentModelById, resolveContentForEvent
+from gql_presence.GraphResolvers import resolvePresenceOnEvent
 
 
 @strawberryA.federation.type(keys=["id"], description="""Entity representing presence""")
@@ -47,13 +48,15 @@ class PresenceGQLModel:
         return result
 
     @strawberryA.field(description="""user id""")
-    def user_id(self) -> 'UserGQLModel':
-       return self.user_id
+    async def user(self, info: strawberryA.types.Info) -> 'UserGQLModel':
+        result = await resolveUserModelById(AsyncSessionFromInfo(info), self.user_id)
+        return result
 
     
-    @strawberryA.field(description="""Task on event Id""")
-    async def task_on_event(self) -> 'TaskOnEventGQLModel':
-        return self.task_on_event
+    @strawberryA.field(description="""Task on event Id""")  
+    async def task_on_event(self, info: strawberryA.types.Info) -> 'TaskOnEventGQLModel':
+        result = await resolveTaskOnEventModelById(AsyncSessionFromInfo(info), self.taskOnEvent_id)
+        return result
    
 @strawberryA.federation.type(keys=["id"], description="""Entity representing presence type""")
 class PresenceTypeGQLModel:
@@ -72,8 +75,9 @@ class PresenceTypeGQLModel:
         return self.type
 
     @strawberryA.field(description="""PresenceId""")
-    async def presence(self) -> 'PresenceGQLModel':
-        return self.presence
+    async def presence(self, info: strawberryA.types.Info) -> 'PresenceGQLModel':
+        result = await resolvePresenceModelById(AsyncSessionFromInfo(info), self.id)
+        return result
     
 @strawberryA.federation.type(keys=["id"], description="""Entity for Tasks on events""")
 class TaskOnEventGQLModel:
@@ -88,13 +92,15 @@ class TaskOnEventGQLModel:
         return self.id
         
     @strawberryA.field(description="""PresenceId""")
-    async def presence(self) -> 'PresenceGQLModel':
-        return self.presence
+    async def presence(self, info: strawberryA.types.Info) -> 'PresenceGQLModel':
+        result = await resolvePresenceModelById(AsyncSessionFromInfo(info), self.id)
+        return result
 
+    
     @strawberryA.field(description="""Task Id""")
-    async def presence(self) -> 'TaskGQLModel':
-        return self.presence   
-        
+    async def task(self, info: strawberryA.types.Info) -> 'TaskGQLModel':
+        result = await resolveTaskModelById(AsyncSessionFromInfo(info), self.task_id)
+        return result
 
 @strawberryA.federation.type(keys=["id"], description="""Entity representing tasks""")
 class TaskGQLModel:
@@ -106,19 +112,38 @@ class TaskGQLModel:
 
     #co se vrací bude atributem (přímo v tabulce)
     #           relace (v jiné tabulce) -> udělat resolver viz ř. 44
+    # pořádně projít každý prvek, resolver
+    
     @strawberryA.field(description="""Primary key of task""")
     def id(self) -> strawberryA.ID:
         return self.id
+
+    @strawberryA.field(description="""TaskOnEvent id""")
+    async def task_on_event(self, info: strawberryA.types.Info) -> 'TaskOnEventGQLModel':
+        result = await resolveTaskOnEventModelById(AsyncSessionFromInfo(info), self.id)
+        return result
+    @strawberryA.field(description="""task on event id""")
+    async def task_on_event(self, info: strawberryA.types.Info) -> typing.List['TaskGQLModel']:
+        result = await resolveTaskForEvent(AsyncSessionFromInfo(info), self.id)
+        return result
+
+    @strawberryA.field(description="""user id""")
+    async def user(self, info: strawberryA.types.Info) -> 'UserGQLModel':
+        result = await resolveUserModelById(AsyncSessionFromInfo(info), self.user_id)
+        return result
     
-    @strawberryA.field(description="""TaskOnEvent Id""")
-    async def presence(self) -> 'TaskOnEventGQLModel':
-        return self.presence
-    
-    @strawberryA.field(description="""user Id""")
-    async def presence(self) -> 'UserGQLModel':
-        return self.presence
+    @strawberryA.field(description="""event id""")
+    async def user(self, info: strawberryA.types.Info) -> 'EventGQLModel':
+        result = await resolveUserModelById(AsyncSessionFromInfo(info), self.user_id)
+        return result
 
 @strawberryA.federation.type(keys=["id"], description="""Entity representing content""")
+
+# ######################### ########################
+
+############################# #############################
+
+
 class ContentGQLModel:
     @classmethod
     async def resolve_reference(cls, info: strawberryA.types.Info, id:strawberryA.ID):
@@ -130,9 +155,9 @@ class ContentGQLModel:
     def id(self) -> strawberryA.ID:
         return self.id 
 
-   # @strawberryA.field(description="""Event Id""")
-   # async def presence(self) -> 'EventGQLModel':
-   #     return self.presence
+    # DODĚLAT BRIEF A FULL DESC
+
+   
     
 @strawberryA.federation.type(extend=True, keys=["id"])
 class UserGQLModel:
@@ -150,9 +175,34 @@ class UserGQLModel:
     # (self, info: strawberryA ....)
     # v těle volat resolver PresenceForUser (create1NGetter)
     @strawberryA.field(description="""presence id""")
-    def presence(self) -> 'PresenceGQLModel':
-       return self.presence
-       
+    async def presence(self, info: strawberryA.types.Info) -> typing.List['PresenceGQLModel']:
+        result = await resolvePresenceForUser(AsyncSessionFromInfo(info), self.id)
+        return result
+
+
+@strawberryA.federation.type(extend=True, keys=["id"])
+class EventGQLModel:
+    id: strawberryA.ID = strawberryA.federation.field(external=True)
+
+    @classmethod
+    def resolve_reference(cls, id: strawberryA.ID):
+        return EventGQLModel(id=id) # jestlize rozsirujete, musi byt tento vyraz
+
+    # relace (1,N)
+    @strawberryA.field(description="""presence id""")
+    async def presence(self, info: strawberryA.types.Info) -> typing.List['PresenceGQLModel']:
+        result = await resolvePresenceOnEvent(AsyncSessionFromInfo(info), self.id)
+        return result
+    
+    # rozšiřujeme jen o atributy (1,1)
+    @strawberryA.field(description="""content id""")
+    async def content(self, info: strawberryA.types.Info) -> typing.Union['ContentGQLModel', None]: 
+        result = await resolveContentForEvent(AsyncSessionFromInfo(info), self.id) # z tabulky obsahů hledáme event_id = event_id v Content
+        # if(len(result == 0)) return None
+        # if(len(result =! 0)) return result
+        return result
+    
+    
     
     
     

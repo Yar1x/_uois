@@ -22,6 +22,7 @@ resolvePresenceModelPage = createEntityGetter(PresenceModel)
 resolvePresenceModelById = createEntityByIdGetter(PresenceModel)
 #přejmenovat
 resolvePresenceForUser = create1NGetter(PresenceModel,foreignKeyName='user_id') 
+resolvePresenceOnEvent = create1NGetter(PresenceModel, foreignKeyName='event_id')
 
 # presence type
 
@@ -36,7 +37,9 @@ resolveUserModelById = createEntityByIdGetter(UserModel)
 # task on event
 
 resolveTaskOnEventModelPage = createEntityGetter(TaskOnEventModel)
+resolveTaskForEvent = create1NGetter(TaskOnEventModel, foreignKeyName='task_id')
 resolveTaskOnEventModelById = createEntityByIdGetter(TaskOnEventModel)
+
 
 # tasks
 
@@ -47,6 +50,8 @@ resolveTaskModelById = createEntityByIdGetter(TaskModel)
 
 resolveContentModelByPage = createEntityGetter(ContentModel)
 resolveContentModelById = createEntityByIdGetter(ContentModel)
+resolveContentForEvent = create1NGetter(ContentModel, foreignKeyName='event_id')
+
 
 
 ###########################################################################################################################
