@@ -33,20 +33,18 @@ class PresenceModel(BaseModel):
     __tablename__ = 'presences'
 
     id = UUIDColumn() #uuid
-    date = Column(DateTime) 
+    #date = Column(DateTime) 
 
     presenceType_id = Column(ForeignKey('presencetypes.id'),primary_key = True)
     presenceType = relationship('PresenceTypeModel', back_populates='presences')
 
     #definovat foreign key user_id
-    user_id = Column(ForeignKey('user.id'),primary_key = True)
+    user_id = Column(ForeignKey('users.id'),primary_key = True)
     users = relationship('UserModel', back_populates='presences')
 
-    event_id = Column(ForeignKey('event.id'),primary_key = True)
+    event_id = Column(ForeignKey('events.id'),primary_key = True)
     events = relationship('EventModel', back_populates='presences')
 
-    taskOnEvent_id = Column(ForeignKey('taskonevent.id'),primary_key = True)
-    tasksOnEvents = relationship('TaskOnEventModel', back_populates='presences')
 
 
 class PresenceTypeModel(BaseModel):
@@ -86,46 +84,32 @@ class EventModel(BaseModel):
     id = UUIDColumn()
 
     presences = relationship('PresenceModel', back_populates='events')
+    #může být tasks relationship
+
     
-    #content_id = Column(ForeignKey('content.id'),primary_key = True)
-    #contents = relationship('ContentModel', back_populates='events')
     
-# nedotazovat se na tuto tabulku
-class TaskOnEventModel(BaseModel):
-
-    __tablename__='tasksonevents'
-
-    id = UUIDColumn()
-    name = Column(String)
-
-
-    presences = relationship('PresenceModel', back_populates='tasksOnEvents')
-
-    task_id = Column(ForeignKey('task.id'),primary_key = True)
-    tasks = relationship('TaskModel', back_populates='tasksOnEvents')
     
 class TaskModel(BaseModel):
 
     __tablename__='tasks'
 
     id = UUIDColumn()
+    name = Column(String)
     brief_des = Column(String)
-    detail_des = Column(String)
+    detailed_des = Column(String)
     reference = Column(String)
     date_of_entry = Column(DateTime)
     date_of_submission = Column(DateTime)
-    date_of_fullfilment = Column(DateTime)
+    date_of_fulfillment = Column(DateTime)
 
-    tasksOnEvents = relationship('TaskOnEventModel', back_populates='tasks')
-
-    
-    user_id = Column(ForeignKey('user.id', primary_key = True))
+   
+    user_id = Column(ForeignKey('users.id', primary_key = True))
     users = relationship('UserModel', back_populates='tasks')
 
-    
+    event_id = Column(ForeignKey('events.id'), primary_key = True)
+    #nemusí být relationship
 
-    content_id = Column(ForeignKey('content.id'),primary_key = True)
-    contents = relationship('ContentModel', back_populates='tasks')
+    
 
 
 class ContentModel(BaseModel):
@@ -134,10 +118,10 @@ class ContentModel(BaseModel):
 
     id = UUIDColumn()
     brief_des = Column(String)
-    detail_des = Column(String)
+    detailed_des = Column(String)
 
-    tasks = relationship('TaskModel', back_populates='contents')
-    event_id = Column(ForeignKey('event.id'),primary_key = True)
+    
+    event_id = Column(ForeignKey('events.id'),primary_key = True)
     #events = relationship('EventModel', back_populates='contents')
 
 

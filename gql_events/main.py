@@ -37,7 +37,7 @@ class UserGQLModel:
 class EventGQLModel:
 
     @strawberryB.field
-    def id(self) -> str:
+    def id(self) -> strawberryB.ID:
         return self['id']
 
     @strawberryB.field

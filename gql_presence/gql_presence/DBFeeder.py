@@ -53,7 +53,7 @@ def determineTasks():
         {
             'brief_des': 'create adatabase for presence',
             'detailed_des': 'create data structures, which define presence at an event, presence types at an event, specified content and tasks for the event ',
-            'referance': 'presence',
+            'reference': 'presence',
             'date_of_entry': randomDate(),
             'date_of_submission': randomDate(),
             'date_of_fulfillment': randomDate(),
@@ -63,7 +63,7 @@ def determineTasks():
         {
             'brief_des': 'create a database for a user',
             'detailed_des': 'create data structures, which define a user (name, surname, email, etc.), who has a certain role in a group at the university ',
-            'referance': 'user',
+            'reference': 'user',
             'date_of_entry': randomDate(),
             'date_of_submission': randomDate(),
             'date_of_fulfillment': randomDate(),
@@ -73,7 +73,7 @@ def determineTasks():
         {
             'brief_des': 'create a database for an event',
             'detailed_des': 'create data structures, which define an event, event type(classes, test, etc), what time it is, its location (area, building, classroom) ',
-            'referance': 'event',
+            'reference': 'event',
             'date_of_entry': randomDate(),
             'date_of_submission': randomDate(),
             'date_of_fulfillment': randomDate(),
