@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Union, Optional
 import typing
 from unittest import result
 import strawberry as strawberryA
@@ -53,7 +53,8 @@ class PresenceGQLModel:
         result = EventGQLModel(id=self.event)
         return result
 
-   
+
+
    
 @strawberryA.federation.type(keys=["id"], description="""Entity representing presence type""")
 class PresenceTypeGQLModel:
@@ -72,6 +73,7 @@ class PresenceTypeGQLModel:
         return self.name
 
     @strawberryA.field(description="""PresenceId""")
+    
     #výstupem bude list
     async def presences(self, info: strawberryA.types.Info) -> typing.List['PresenceGQLModel']:
         result = await resolvePresencesForPresenceType(AsyncSessionFromInfo(info), self.id)
@@ -96,12 +98,12 @@ class TaskGQLModel:
         return self.name
     
     @strawberryA.field(description="""Brief description""")
-    def brief_desc(self) -> str:
-        return self.brief_desc
+    def brief_des(self) -> str:
+        return self.brief_des
     
     @strawberryA.field(description="""Full description""")
-    def detailed_desc(self) -> str:
-        return self.detailed_desc
+    def detailed_des(self) -> str:
+        return self.detailed_des
     
     @strawberryA.field(description=""" Reference""")
     def reference(self) -> str:
@@ -123,6 +125,10 @@ class TaskGQLModel:
     async def event(self, info: strawberryA.types.Info) -> 'EventGQLModel':
         result = EventGQLModel(id=self.event_id)
         return result
+    
+    #USER ID DODĚAT
+
+
 
 
 @strawberryA.federation.type(keys=["id"], description="""Entity representing content""")
@@ -138,12 +144,12 @@ class ContentGQLModel:
         return self.id 
 
     @strawberryA.field(description="""Brief description""")
-    def brief_desc(self) -> str:
-        return self.brief_desc
+    def brief_des(self) -> str:
+        return self.brief_des
     
     @strawberryA.field(description="""Full description""")
-    def detailed_desc(self) -> str:
-        return self.detailed_desc
+    def detailed_des(self) -> str:
+        return self.detailed_des
 
     @strawberryA.field(description="""event id""")
     async def event(self, info: strawberryA.types.Info) -> 'EventGQLModel':

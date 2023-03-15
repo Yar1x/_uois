@@ -1,6 +1,6 @@
 from doctest import master
 from functools import cache
-from gql_presence.DBDefinitions import BaseModel, PresenceModel, PresenceTypeModel, ContentModel, TaskModel, TaskOnEventModel
+from gql_presence.DBDefinitions import BaseModel, PresenceModel, PresenceTypeModel, ContentModel, TaskModel
 
 import random
 import itertools
