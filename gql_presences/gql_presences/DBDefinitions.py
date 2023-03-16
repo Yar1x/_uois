@@ -52,9 +52,81 @@ def UUIDFKey(*, ForeignKey=None, nullable=False):
 # je-li treba, muzete definovat modely obsahujici jen id polozku, na ktere se budete odkazovat
 #
 ###########################################################################################################################
+class PresenceModel(BaseModel):
+
+
+    """Spravuje data spojené s účasti na události"""
+
+    __tablename__ = 'presences'
+
+    id = UUIDColumn() #uuid
+    lastchange = Column(DateTime, server_default=sqlalchemy.sql.func.now())
+
+    presenceType_id = Column(ForeignKey('presencetypes.id'),primary_key = True)
+    presenceType = relationship('PresenceTypeModel', back_populates='presences')
+
+
+    user_id = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True)
+    #users = relationship("UserModel", back_populates="tasks", foreign_keys=[user_id])
+
+    event_id = UUIDFKey(nullable=True)#Column(ForeignKey("events.id"), index=True, nullable=True)
+
+    created = Column(DateTime, server_default=sqlalchemy.sql.func.now())
+    lastchange = Column(DateTime, server_default=sqlalchemy.sql.func.now())
+    changedby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
+    changedby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
+
+
+class PresenceTypeModel(BaseModel):
+    """"
+        Urcuje typ pritomnosti
+    """
+    __tablename__='presencetypes'
+
+    id = UUIDColumn()
+    name = Column(String)
+    name_en = Column(String)
+
+    presences = relationship('PresenceModel', back_populates='presenceType')
+
+    created = Column(DateTime, server_default=sqlalchemy.sql.func.now())
+    lastchange = Column(DateTime, server_default=sqlalchemy.sql.func.now())
+    changedby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
+    changedby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
+
+
+class UserModel(BaseModel):
+
+    """
+    Spravuje usera
+    """
+
+    __tablename__='users'
+
+    id = UUIDColumn()
+
+    #presences = relationship('PresenceModel', back_populates='users')
+    #tasks = relationship('TaskModel', back_populates='users')
+
+
+class EventModel(BaseModel):
+    """
+    Spravuje events
+    """
+    #tablename v množném čísle
+    __tablename__='events'
+
+    id = UUIDColumn()
+    
+
+    #presences = relationship('PresenceModel', back_populates='events')
+    #může být tasks relationship
 
 class TaskModel(BaseModel):
 
+    """"
+        Urcuje úlohy pro users
+    """
     __tablename__ = "tasks"
 
     id = UUIDColumn()
@@ -82,7 +154,13 @@ class TaskModel(BaseModel):
 
 
 class ContentModel(BaseModel):
-    __tablename__ = "taskcontents"
+
+    """"
+        Urcuje obsah události (co se má dát na události)
+    """
+
+
+    __tablename__ = "contents"
 
     id = UUIDColumn()
     brief_des = Column(String)

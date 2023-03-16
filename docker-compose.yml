@@ -151,6 +151,10 @@ services:
     #ports: #v deploymentu by nebylo zadne mapovani portu
     #   # vnejsi port : port, kde sluzbu poskytuje kontejner
       #- 31120:8000
+    ports:
+      - 31128:8000
+
+
 
   gql_externalids:
     image: gql_externalids
@@ -286,6 +290,8 @@ services:
         condition: service_started
       gql_ug:
         condition: service_started
+    ports:
+      - 31127:8000
 
   gql_forms:
     image: gql_forms

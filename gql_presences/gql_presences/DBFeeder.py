@@ -4,6 +4,7 @@ from gql_presences.DBDefinitions import (
     BaseModel,
     ContentModel,
     TaskModel,
+    PresenceTypeModel
 )
 
 import random
@@ -37,38 +38,46 @@ def singleCall(asyncFunc):
 
 @cache
 def determinePresenceTypes():
-    """Definuje zakladni typy přítomnosti a udrzuje je v pameti"""
-    presenceTypes = [
+
+    #Definuje zakladni typy přítomnosti a udrzuje je v pameti
+
+    presenceTypes  = [
         {
+            "id": "a6ca5364-7abd-11ed-a1eb-0242ac120002",
             "name": "přítomen",
             "name_en": "present",
-            "id": "a6ca5364-7abd-11ed-a1eb-0242ac120002",
+            
         },
-        # doplnit zbytek UUID
         {
+            "id": "a6ca574c-7abd-11ed-a1eb-0242ac120002",
             "name": "absent",
             "name_en": "absent",
-            "id": "a6ca574c-7abd-11ed-a1eb-0242ac120002",
+            
         },
         {
+        
+            "id": "a6ca5b7a-7abd-11ed-a1eb-0242ac120002",
             "name": "nemoc",
             "name_en": "sick leave",
-            "id": "a6ca5b7a-7abd-11ed-a1eb-0242ac120002",
+            
         },
         {
+            "id": "a6ca5d0a-7abd-11ed-a1eb-0242ac120002",
             "name": "ŘD",
             "name_en": "official leave",
-            "id": "a6ca5d0a-7abd-11ed-a1eb-0242ac120002",
+            
         },
         {
+            "id": "a6ca5ee0-7abd-11ed-a1eb-0242ac120002",
             "name": "služba",
             "name_en": "guard duty",
-            "id": "a6ca5ee0-7abd-11ed-a1eb-0242ac120002",
+            
         },
         {
+            "id": "a6ca6264-7abd-11ed-a1eb-0242ac120002",
             "name": "NV",
             "name_en": "compensatory leave",
-            "id": "a6ca6264-7abd-11ed-a1eb-0242ac120002",
+            
         },
     ]
     return presenceTypes
@@ -76,35 +85,50 @@ def determinePresenceTypes():
 
 @cache
 def determineTasks():
-    """Determinuje základní úlohy"""
+
+    #Determinuje základní úlohy
 
     tasks = [
         {
+            "id": "1fdd0994-7b0f-11ed-a1eb-0242ac120002",
+            "name": "Presence database",
             "brief_des": "create adatabase for presence",
             "detailed_des": "create data structures, which define presence at an event, presence types at an event, specified content and tasks for the event ",
             "reference": "presence",
             "date_of_entry": randomDate(),
             "date_of_submission": randomDate(),
             "date_of_fulfillment": randomDate(),
-            "id": "1fdd0994-7b0f-11ed-a1eb-0242ac120002",
+
+            "user_id": "a35dcae0-c36e-11ed-afa1-0242ac120002",
+            "event_id": "c2282fb0-c36e-11ed-afa1-0242ac120002"
+            
         },
         {
+            "id": "1fdd0c28-7b0f-11ed-a1eb-0242ac120002",
+            "name": "User database",
             "brief_des": "create a database for a user",
             "detailed_des": "create data structures, which define a user (name, surname, email, etc.), who has a certain role in a group at the university ",
             "reference": "user",
             "date_of_entry": randomDate(),
             "date_of_submission": randomDate(),
             "date_of_fulfillment": randomDate(),
-            "id": "1fdd0c28-7b0f-11ed-a1eb-0242ac120002",
+
+            "user_id": "a35dce0a-c36e-11ed-afa1-0242ac120002",
+            "event_id": "c228324e-c36e-11ed-afa1-0242ac120002"
         },
         {
+            "id": "1fdd0e12-7b0f-11ed-a1eb-0242ac120002",
+            "name": "Event database",
             "brief_des": "create a database for an event",
             "detailed_des": "create data structures, which define an event, event type(classes, test, etc), what time it is, its location (area, building, classroom) ",
             "reference": "event",
             "date_of_entry": randomDate(),
             "date_of_submission": randomDate(),
             "date_of_fulfillment": randomDate(),
-            "id": "1fdd0e12-7b0f-11ed-a1eb-0242ac120002",
+
+            "user_id":"a35dd026-c36e-11ed-afa1-0242ac120002",
+            "event_id":"c22833ac-c36e-11ed-afa1-0242ac120002"
+            
         },
     ]
     tasks = []
@@ -114,23 +138,31 @@ def determineTasks():
 @cache
 def determineContents():
 
-    """Define základní typy obsahu na události"""
+    #Define základní typy obsahu na události
 
     contents = [
         {
+            "id": "0ea557e6-7b12-11ed-a1eb-0242ac120002",
+            "name": "Lessons",
             "brief_des": "INF / LESSON",
             "detailed_des": "students will learn advanced programming techniques, such as creating your own simple database ",
-            "id": "0ea557e6-7b12-11ed-a1eb-0242ac120002",
+            "event_id": "c2282fb0-c36e-11ed-afa1-0242ac120002"
         },
         {
+            "id": "0ea55a84-7b12-11ed-a1eb-0242ac120002",
+            "name": "Exams",
             "brief_des": "INF / EXAM",
             "detailed_des": "Students will have to define data structures for a school ",
-            "id": "0ea55a84-7b12-11ed-a1eb-0242ac120002",
+            "event_id": "c228324e-c36e-11ed-afa1-0242ac120002"
+            
         },
         {
+            "id": "0ea558b7-7b12-11ed-a1eb-0242ac120002",
+            "name": "Test",
             "brief_des": "INF / CREDIT TEST",
             "detailed_des": "Students will have to create an ER-Diagram ",
-            "id": "0ea558b7-7b12-11ed-a1eb-0242ac120002",
+            "event_id":"c22833ac-c36e-11ed-afa1-0242ac120002"
+            
         },
     ]
     contents = []
@@ -139,7 +171,7 @@ def determineContents():
 
 import datetime
 
-
+# kdyby bylo potřeba použít
 def randomDate():
 
     """Vytváří nám náhodný datum"""
@@ -153,21 +185,35 @@ def randomDate():
 
 
 import asyncio
+
+async def predefineAllDataStructures(asyncSessionMaker):
+    """
+    It takes a session maker and a model and a list of tuples and inserts the tuples into the table.
+    
+    :param asyncSessionMaker: a function that returns a session object
+    """
+    await asyncio.gather(
+        putPredefinedStructuresIntoTable(asyncSessionMaker, PresenceTypeModel, determinePresenceTypes),
+        putPredefinedStructuresIntoTable(asyncSessionMaker, TaskModel, determineTasks),
+        putPredefinedStructuresIntoTable(asyncSessionMaker, ContentModel, determineContents),
+
+        
+     )
+async def PutDemodata(asyncSessionMaker):
+    
+#   It takes a session maker and a model and a list of dictionaries and puts them into the database
+#   param asyncSessionMaker: a function that returns a session
+    
+   
+    await asyncio.gather(
+        putPredefinedStructuresIntoTable(asyncSessionMaker, PresenceTypeModel, determinePresenceTypes),
+        putPredefinedStructuresIntoTable(asyncSessionMaker, TaskModel, determineTasks),
+        putPredefinedStructuresIntoTable(asyncSessionMaker, ContentModel, determineContents),
+        
+    )
 def get_demodata(asyncSessionMaker):
     pass
 
-async def predefineAllDataStructures(asyncSessionMaker):
-
-    await putPredefinedStructuresIntoTable(asyncSessionMaker, TaskModel, determineTasks)
-    await putPredefinedStructuresIntoTable(
-            asyncSessionMaker, ContentModel, determineContents
-        )
-
-    return
-
-
-# vytvořit async def
-# bude se volat akorát TaskModel a ContentModel
 """Zabezpeci prvotni inicicalizaci typu externích ids v databazi
        DBModel zprostredkovava tabulku, je to sqlalchemy model
        structureFunction() dava data, ktera maji byt ulozena
